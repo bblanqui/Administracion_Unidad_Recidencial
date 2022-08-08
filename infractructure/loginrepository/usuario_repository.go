@@ -35,7 +35,7 @@ func (user *UsuarioRepository) GetUsuario() []entity.Usuario {
 	 var usuario entity.Usuario
 	 re,_ := db.Find(contexto, bson.D{})
 	 re.Decode(&resultado)
-
+///
      for re.Next(contexto) {
 		
 		if err := re.Decode(&usuario); err != nil {
