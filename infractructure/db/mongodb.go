@@ -1,9 +1,11 @@
 package db
-import(
+
+import (
 	"context"
-	"log"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"log"
+	"time"
 )
 
 var MongoCN = ConectarBD()
@@ -15,19 +17,26 @@ func ConectarBD() *mongo.Client {
 		log.Fatal(err)
 		return client
 	}
-	err = client.Ping(context.TODO(),nil)
+	err = client.Ping(context.TODO(), nil)
 	if err != nil {
 		log.Fatal(err)
 		return client
 	}
 	log.Println("conexion exitosa")
+
 	return client
 }
 
 func ChequeoConnection() bool {
-	err := MongoCN.Ping(context.TODO(),nil)
+	err := MongoCN.Ping(context.TODO(), nil)
 	if err != nil {
 		return false
 	}
 	return true
+}
+
+func DbColeccion(db string, coleccion string) (contexto context.Context, cancelar context.CancelFunc, client *mongo.Collection) {
+	contextos, cancel := context.WithTimeout(context.Background(), 15*time.Second)
+	mongoDb := MongoCN.Database(db).Collection(coleccion)
+	return contextos, cancel, mongoDb
 }

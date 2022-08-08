@@ -8,6 +8,6 @@ import (
 func Login(app *fiber.App) {
 
 	app.Get("/", controllers.GetUsuarios)
-	app.Get("/usuario", controllers.GetUsuario)
+	app.Get("/usuario/+", controllers.GetUsuario)
 
 }

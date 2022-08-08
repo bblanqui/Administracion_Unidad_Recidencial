@@ -1,21 +1,19 @@
 package controllers
 
 import (
-	
-	"github.com/gofiber/fiber/v2"
 	"github.com/bblanqui/Administracion_Unidad_Recidencial/services"
+	"github.com/gofiber/fiber/v2"
 )
-    var usuarios = services.ServiceUsuario{}
-	
 
-func  GetUsuarios(c *fiber.Ctx)  error {
-	 var usuario=usuarios.GetUsuario()
-	 return c.Status(fiber.StatusOK).JSON(usuario)
+var usuarios = services.ServiceUsuario{}
 
-}
-func  GetUsuario(c *fiber.Ctx)  error {
-	var usuario=usuarios.GetUsuario_id(21)
+func GetUsuarios(c *fiber.Ctx) error {
+	var usuario = usuarios.GetUsuario()
 	return c.Status(fiber.StatusOK).JSON(usuario)
 
 }
+func GetUsuario(c *fiber.Ctx) error {
+	var usuario = usuarios.GetUsuario_id(c.Params("+"))
+	return c.Status(fiber.StatusOK).JSON(usuario)
 
+}
