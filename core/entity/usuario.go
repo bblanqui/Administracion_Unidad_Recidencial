@@ -1,14 +1,18 @@
 package entity
 
-import "time"
+import (
+	"time"
+    "go.mongodb.org/mongo-driver/bson/primitive"
+
+)
 
 type Usuario struct{
-	ID string `json:"id"`
-    Nombre_Usuario string `json:"nombre_usuario"`
-	Password string `json:"password"`
-    Role string `json:"role"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdateAt time.Time `json:"update_at,omitempty"`
+	ID primitive.ObjectID `bson:"_id,omitempty" json:"id"`
+    Nombre_Usuario string `bson:"nombre_usuario" json:"nombre_usuario"`
+	Password string `bson:"password,omitempty" json:"password"`
+    Role string `bson:"role" json:"role"`
+	CreatedAt time.Time `bson:"created_at,omitempty" json:"created_at"`
+	UpdateAt time.Time `bson:"update_at,omitempty" json:"update_at,omitempty"`
 }
 
 type Usuarios []Usuario

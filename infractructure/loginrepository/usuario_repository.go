@@ -1,37 +1,61 @@
 package loginrepository
 
 import (
+	"context"
+	"fmt"
+	"time"
+	"log"
+
+
 	"github.com/bblanqui/Administracion_Unidad_Recidencial/core/entity"
+	"github.com/bblanqui/Administracion_Unidad_Recidencial/infractructure/db"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 type UsuarioRepository struct {
-      Conexion string
-
+      Db string 
+	  Colleccion string
+      Conexion *mongo.Client
 }
+var db_coleccion_usuario = UsuarioRepository{
+	 Db:"Usuarios_Admin" ,
+	 Colleccion: "Usuario",
+	 Conexion: db.MongoCN,
+}
+
+
 
 func (user *UsuarioRepository) GetUsuario() []entity.Usuario {
-	user.Conexion ="ok"
-	p1 := entity.Usuario{
-	ID: "id_suario",
-    Nombre_Usuario: "id_suario",
-	Password : "id_suario",
-    Role : "id_suario",
-}
-p2 := entity.Usuario{
-	ID: "id_suario",
-    Nombre_Usuario: "id_suario",
-	Password : "id_suario",
-    Role : "id_suario",
-}
-	
-	 return []entity.Usuario{p1,p2}
-	}    
+     contexto, cancel := context.WithTimeout(context.Background(), 15*time.Second)
+	 defer cancel()
+	 db :=  db_coleccion_usuario.Conexion.Database(db_coleccion_usuario.Db).Collection(db_coleccion_usuario.Colleccion)
+	 
+	 var resultado []entity.Usuario
+	 var usuario entity.Usuario
+	 re,_ := db.Find(contexto, bson.D{})
+	 re.Decode(&resultado)
+
+     for re.Next(contexto) {
+		
+		if err := re.Decode(&usuario); err != nil {
+			log.Fatal(err)
+		}
+		resultado = append(resultado, usuario)
+		
+		fmt.Println(usuario)
+	}
+	if err := re.Err(); err != nil {
+		log.Fatal(err)
+	}
+	 return resultado
+}    
 	 
 
 
 func (user *UsuarioRepository) GetUsuario_id(id int) entity.Usuario {
-	user.Conexion ="ok"
-	return entity.Usuario{	ID: "id_suario",
+
+	return entity.Usuario{	
     Nombre_Usuario: "id_suario",
 	Password : "id_suario",
     Role : "id_suario",
@@ -39,7 +63,6 @@ func (user *UsuarioRepository) GetUsuario_id(id int) entity.Usuario {
 }
 
 func (user *UsuarioRepository) InsertUsuario(Usuario *entity.Usuario) bool {
-	user.Conexion ="ok"
 	return true
 }
 
